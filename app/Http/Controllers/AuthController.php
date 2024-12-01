@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -24,16 +26,16 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|unique:users,username',
-            'password' => 'required|string|min:8|confirmed', // Adds password confirmation
+            'email' => 'required|string|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
             'level' => 'required|string|in:worker,company',
         ]);
 
         try {
-            // Create user with MD5 hashing
+            // Create user with bcrypt hashing for password
             User::create([
-                'username' => $request->username,
-                'password' => md5($request->password), // Hash the password using MD5
+                'email' => $request->email,
+                'password' => Hash::make($request->password), // Use bcrypt (Hash::make) for secure hashing
                 'level' => $request->level,
             ]);
 
@@ -47,41 +49,40 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        // Retrieve the input data
-        $credentials = $request->only('username', 'password');
-        // Hash the provided password with MD5 to match the stored hash
-        $hashedPassword = md5($credentials['password']);
+        // Retrieve user by email
+        $user = User::where('email', $request->email)->first();
 
-        // Find the user by username and compare the hashed password
-        $user = User::where('username', $credentials['username'])
-                    ->where('password', $hashedPassword)
-                    ->first();
-
-        if ($user) {
-            // Log the user in and set session variable
+        // Check if user exists and password is correct
+        if ($user && Hash::check($request->password, $user->password)) {
+            // Log the user in
             Auth::login($user);
+        
+            // Set session variable
             $request->session()->put('logged_in', true);
 
             // Redirect based on user role
             if ($user->level == 'worker') {
-                return redirect()->route('worker.dashboard'); // Redirect to worker dashboard
+                return redirect()->route('worker.dashboard');
             } elseif ($user->level == 'company') {
-                return redirect()->route('company.dashboard'); // Redirect to company dashboard
+                return redirect()->route('company.dashboard');
             }
         }
 
-        return back()->withErrors(['login_error' => 'Invalid username or password']);
+        // If login fails
+        return redirect('/signin')->withErrors(['login_error' => 'Invalid email or password']);
     }
 
     // Handle user logout
     public function logout(Request $request)
     {
         Auth::logout();
-        $request->session()->forget('logged_in'); // Clear the session
-        return redirect('/signin');
+        $request->session()->invalidate(); // Invalidate the session
+        $request->session()->regenerateToken(); // Regenerate CSRF token for security
+
+        return redirect('/signin')->with('status', 'You have been logged out successfully.');
     }
 }

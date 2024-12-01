@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html dir="ltr">
 
@@ -48,7 +47,8 @@
         <div class="auth-wrapper d-flex no-block justify-content-center align-items-center position-relative"
             style="background:url(home/assets/img/illustrations/come-on-join.png) no-repeat center center;">
             <div class="auth-box row">
-                <div class="col-lg-7 col-md-5 modal-bg-img" style="background-image: url(home/assets/img/illustrations/jobs.png);">
+                <div class="col-lg-7 col-md-5 modal-bg-img"
+                    style="background-image: url(home/assets/img/illustrations/jobs.png);">
                 </div>
                 <div class="col-lg-5 col-md-7 bg-white">
                     <div class="p-3">
@@ -57,26 +57,26 @@
                         </div>
                         <h2 class="mt-3 text-center">Sign In</h2>
                         <p class="text-center">Masukkan email dan password anda untuk Login.</p>
-                        
+
                         @if(session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
                         @endif
 
                         @if ($errors->any())
-                            <div class="alert alert-danger">
-                                {{ $errors->first() }}
-                            </div>
+                        <div class="alert alert-danger">
+                            {{ $errors->first() }}
+                        </div>
                         @endif
                         <form class="mt-4" method="POST" action="{{ route('login') }}">
+                            @csrf
                             <div class="row">
                                 <div class="col-lg-12">
-                                @csrf
                                     <div class="form-group mb-3">
-                                        <label class="form-label text-dark" for="uname">Username</label>
-                                        <input class="form-control" id="uname" type="text" name="username"
-                                            placeholder="enter your username">
+                                        <label class="form-label text-dark" for="uname">Email</label>
+                                        <input class="form-control" id="uname" type="email" name="email"
+                                            placeholder="enter your email">
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -89,18 +89,19 @@
                                 <div class="col-lg-12 text-center">
                                     <button type="submit" class="btn w-100 btn-dark">Sign In</button>
                                 </div>
-                                </form>
-                                <div class="col-lg-12 text-center mt-5">
-                                    Don't have an account? <a href="signup" class="text-danger">Sign Up</a>
-                                </div>
                             </div>
+                        </form>
+                        <div class="col-lg-12 text-center mt-5">
+                            Don't have an account? <a href="signup" class="text-danger">Sign Up</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- Login box.scss -->
-        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- Login box.scss -->
+    <!-- ============================================================== -->
     </div>
     <!-- ============================================================== -->
     <!-- All Required js -->
@@ -113,7 +114,7 @@
     <!-- This page plugin js -->
     <!-- ============================================================== -->
     <script>
-        $(".preloader ").fadeOut();
+    $(".preloader ").fadeOut();
     </script>
 </body>
 

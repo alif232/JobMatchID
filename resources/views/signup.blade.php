@@ -23,7 +23,7 @@
                             <img src="home/assets/img/favicons/favicon.ico" alt="wrapkit">
                         </div>
                         <h2 class="mt-3 text-center">Sign Up</h2>
-                        <p class="text-center">Masukkan username, password dan pilih daftar sebagai apa.</p>
+                        <p class="text-center">Masukkan email, password dan pilih daftar sebagai apa.</p>
 
                         <!-- Display error or success alerts -->
                         @if ($errors->any())
@@ -41,14 +41,14 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group mb-3">
-                                        <label class="form-label text-dark" for="uname">Username</label>
-                                        <input class="form-control" type="text" name="username" placeholder="Username" required>
+                                        <label class="form-label text-dark" for="uname">Email</label>
+                                        <input class="form-control" type="email" name="email" placeholder="Masukkan Email" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <label class="form-label text-dark" for="uname">Password</label>
                                     <div class="form-group mb-3">
-                                        <input class="form-control" type="password" name="password" placeholder="Password" required>
+                                        <input class="form-control" type="password" name="password" placeholder="Masukkan Password" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">

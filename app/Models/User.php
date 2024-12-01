@@ -10,12 +10,17 @@ class User extends Authenticatable
     public $timestamps = true;
 
     protected $fillable = [
-        'username', 'password', 'level',
+        'email', 'password', 'level',
     ];
 
     public function companyDetail()
     {
         return $this->hasOne(CompanyDetail::class, 'user_id');
+    }
+
+    public function workerDetail()
+    {
+        return $this->hasOne(WorkerDetail::class, 'user_id');
     }
 }
 

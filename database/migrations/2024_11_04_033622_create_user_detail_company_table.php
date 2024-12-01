@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('company_address');
             $table->string('logo_photo')->nullable(); // Store path to logo image
             $table->string('phone_number');
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
 

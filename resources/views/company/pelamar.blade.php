@@ -16,7 +16,7 @@
     <link rel="manifest" href="../home/assets/img/favicons/manifest.json">
     <meta name="msapplication-TileImage" content="../home/assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
-    <title>JobMatchID | Company | Dashboard</title>
+    <title>JobMatchID | Company | Pelamar</title>
     <!-- Custom CSS -->
     <link href="../all/assets/extra-libs/c3/c3.min.css" rel="stylesheet">
     <link href="../all/assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
@@ -26,11 +26,52 @@
     <!-- Datatables -->
     <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" rel="stylesheet">
+    <style>
+    /* Gaya Dropdown */
+    .dropdown-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-trigger {
+        color: #007bff;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .dropdown-trigger:hover {
+        text-decoration: underline;
+    }
+
+    .dropdown-menu {
+        display: none;
+        /* Sembunyikan dropdown secara default */
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        min-width: 150px;
+        z-index: 1000;
+        padding: 0;
+    }
+
+    .dropdown-menu .dropdown-item {
+        padding: 10px 15px;
+        color: #333;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-menu .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #007bff;
+    }
+    </style>
 </head>
 
 <body>
     <!-- ============================================================== -->
-    <!-- Preloader - style you can find in spinners.css -->
+    <!-- Preloader -->
     <!-- ============================================================== -->
     <div class="preloader">
         <div class="lds-ripple">
@@ -38,35 +79,31 @@
             <div class="lds-pos"></div>
         </div>
     </div>
+
     <!-- ============================================================== -->
-    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- Main Wrapper -->
     <!-- ============================================================== -->
     <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
         <!-- ============================================================== -->
-        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- Topbar header -->
         <!-- ============================================================== -->
         <header class="topbar" data-navbarbg="skin6">
             <nav class="navbar top-navbar navbar-expand-lg">
                 <div class="navbar-header" data-logobg="skin6">
-                    <!-- Sidebar toggle for mobile -->
-                    <a class="nav-toggler waves-effect waves-light d-block d-lg-none" href="javascript:void(0)">
-                        <i class="ti-menu ti-close"></i>
-                    </a>
+                    <a class="nav-toggler waves-effect waves-light d-block d-lg-none" href="javascript:void(0)"><i
+                            class="ti-menu ti-close"></i></a>
                     <!-- Logo -->
                     <div class="navbar-brand">
                         <a href="dashboard">
                             <img src="../all/assets/images/gallery/logo.png" alt="Logo" class="img-fluid">
                         </a>
                     </div>
-                    <!-- Toggle for mobile -->
                     <a class="topbartoggler d-block d-lg-none waves-effect waves-light" href="javascript:void(0)"
                         data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="ti-more"></i>
-                    </a>
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i
+                            class="ti-more"></i></a>
                 </div>
-
                 <!-- Navbar collapse -->
                 <div class="navbar-collapse collapse" id="navbarSupportedContent">
                     <!-- Left-aligned nav items (if any) -->
@@ -101,44 +138,34 @@
                 </div>
             </nav>
         </header>
+
         <!-- ============================================================== -->
-        <!-- End Topbar header -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- Left Sidebar -->
         <!-- ============================================================== -->
         <aside class="left-sidebar" data-sidebarbg="skin6">
-            <!-- Sidebar scroll-->
-            <div class="scroll-sidebar" data-sidebarbg="skin6">
-                <!-- Sidebar navigation-->
+            <div class="scroll-sidebar">
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="dashboard"
+                        <li class="sidebar-item"><a class="sidebar-link sidebar-link" href="dashboard"
                                 aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
                                     class="hide-menu">Dashboard</span></a></li>
-
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="kelolajobs"
+                        <li class="sidebar-item"><a class="sidebar-link sidebar-link" href="kelolajobs"
                                 aria-expanded="false"><i data-feather="file-text" class="feather-icon"></i><span
                                     class="hide-menu">Kelola Jobs</span></a></li>
-
-                        <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="datapelamar"
+                        <li class="sidebar-item"><a class="sidebar-link sidebar-link" href="datapelamar"
                                 aria-expanded="false"><i data-feather="grid" class="feather-icon"></i><span
                                     class="hide-menu">Data Pelamar</span></a></li>
                     </ul>
                 </nav>
-                <!-- End Sidebar navigation -->
             </div>
-            <!-- End Sidebar scroll-->
         </aside>
+
         <!-- ============================================================== -->
-        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Page wrapper  -->
+        <!-- Page Wrapper -->
         <!-- ============================================================== -->
         <div class="page-wrapper">
             <!-- ============================================================== -->
-            <!-- Bread crumb and right sidebar toggle -->
+            <!-- Bread Crumb -->
             <!-- ============================================================== -->
             <div class="page-breadcrumb">
                 <div class="row">
@@ -148,7 +175,7 @@
                         <div class="d-flex align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb m-0 p-0">
-                                    <li class="breadcrumb-item"><a href="dashboard">Dashboard</a>
+                                    <li class="breadcrumb-item"><a href="datapelamar">Data Pelamar</a>
                                     </li>
                                 </ol>
                             </nav>
@@ -157,100 +184,53 @@
                 </div>
             </div>
             <!-- ============================================================== -->
-            <!-- End Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Container fluid  -->
+            <!-- Data Pelamar -->
             <!-- ============================================================== -->
             <div class="container-fluid">
-                <!-- *************************************************************** -->
-                <!-- Start First Cards -->
-                <!-- *************************************************************** -->
-                <div class="row">
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="card border-end ">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h2 class="text-dark mb-1 font-weight-medium">{{ $pelamarDiterima }}</h2>
-                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Pelamar
-                                            Diterima
-                                        </h6>
-                                    </div>
-                                    <div class="ms-auto mt-md-3 mt-lg-0">
-                                        <span class="opacity-7 text-muted"><i data-feather="user"></i></span>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title d-flex justify-content-between">
+                            Data Pelamar
+                        </h4>
+                        @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="card border-end ">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <div class="d-inline-flex align-items-center">
-                                            <h2 class="text-dark mb-1 font-weight-medium">{{ $pelamarDitolak }}</h2>
-                                        </div>
-                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Pelamar
-                                            Ditolak
-                                        </h6>
-                                    </div>
-                                    <div class="ms-auto mt-md-3 mt-lg-0">
-                                        <span class="opacity-7 text-muted"><i data-feather="user"></i></span>
-                                    </div>
-                                </div>
+                        @endif
+                        @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="card ">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <h2 class="text-dark mb-1 font-weight-medium">{{ $totalPelamar }}</h2>
-                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Pelamar
-                                        </h6>
-                                    </div>
-                                    <div class="ms-auto mt-md-3 mt-lg-0">
-                                        <span class="opacity-7 text-muted"><i data-feather="user-plus"></i></span>
-                                    </div>
-                                </div>
+                        @endif
+                        @if($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul class="mb-0">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
+                        @endif
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataPelamarTable">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Pelamar</th>
+                                        <th>Posisi</th>
+                                        <th>Status</th>
+                                        <th>Tanggal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data akan dimuat oleh DataTables -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <!-- *************************************************************** -->
-                <!-- End First Cards -->
-                <!-- *************************************************************** -->
-                <!-- *************************************************************** -->
-                <!-- Start Top Leader Table -->
-                <!-- *************************************************************** -->
-                <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Pelamar</h4>
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="dashboardTable">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama Pelamar</th>
-                                            <th>Posisi</th>
-                                            <th>Status</th>
-                                            <th>Tanggal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Data akan diisi otomatis oleh DataTables -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             </div>
 
             <!-- Logout Confirmation Modal -->
@@ -274,74 +254,60 @@
                 </div>
             </div>
             </div>
-            <!-- *************************************************************** -->
-            <!-- End Top Leader Table -->
-            <!-- *************************************************************** -->
+            <!-- ============================================================== -->
+            <!-- End Data Pelamar -->
+            <!-- ============================================================== -->
         </div>
         <!-- ============================================================== -->
-        <!-- End Container fluid  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- footer -->
-        <!-- ============================================================== -->
-        <footer class="footer text-center text-muted">
-            JOBMATCHID
-        </footer>
-        <!-- ============================================================== -->
-        <!-- End footer -->
+        <!-- End Page Wrapper -->
         <!-- ============================================================== -->
     </div>
     <!-- ============================================================== -->
-    <!-- End Page wrapper  -->
+    <!-- End Main Wrapper -->
     <!-- ============================================================== -->
-    </div>
+
     <!-- ============================================================== -->
-    <!-- End Wrapper -->
-    <!-- ============================================================== -->
-    <!-- End Wrapper -->
-    <!-- ============================================================== -->
-    <!-- All Jquery -->
+    <!-- All Required JavaScript -->
     <!-- ============================================================== -->
     <script src="../all/assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../all/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- apps -->
-    <!-- apps -->
     <script src="../all/dist/js/app-style-switcher.js"></script>
     <script src="../all/dist/js/feather.min.js"></script>
     <script src="../all/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
     <script src="../all/dist/js/sidebarmenu.js"></script>
-    <!--Custom JavaScript -->
     <script src="../all/dist/js/custom.min.js"></script>
-    <!--This page JavaScript -->
-    <script src="../all/assets/extra-libs/c3/d3.min.js"></script>
-    <script src="../all/assets/extra-libs/c3/c3.min.js"></script>
     <script src="../all/assets/libs/chartist/dist/chartist.min.js"></script>
     <script src="../all/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
-    <script src="../all/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
-    <script src="../all/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="../all/dist/js/pages/dashboards/dashboard1.min.js"></script>   
+    <script src="../all/assets/extra-libs/c3/d3.min.js"></script>
+    <script src="../all/assets/extra-libs/c3/c3.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var table = $('#dashboardTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('company.dashboard') }}", // Mengambil data melalui AJAX
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex' }, // Kolom nomor urut
-                    { data: 'nama', name: 'nama' }, // Nama pelamar (mengambil dari relasi 'user')
-                    { data: 'posisi', name: 'posisi' }, // Posisi pekerjaan
-                    { data: 'status', name: 'status' }, // Status pelamar
-                    { data: 'tanggal', name: 'tanggal' } // Tanggal lamaran
-                ],
-                order: [[4, 'desc']], // Mengurutkan berdasarkan tanggal lamaran (kolom ke-4)
-                searching: false,
-                pageLength: 5,
-                lengthChange: false
-            });
+    <script>
+    $(document).ready(function() {
+        var table = $('#dataPelamarTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('pelamar') }}",  // Ensure this route is correct
+                type: "GET",
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'nama', name: 'nama', orderable: false, searchable: true }, // Searchable by name
+                { data: 'posisi', name: 'posisi', orderable: false, searchable: true }, // Searchable by position
+                { data: 'status', name: 'status', searchable: false },
+                { data: 'tanggal', name: 'tanggal', searchable: false },
+            ],
+            order: [[4, 'asc']],
+            searching: true,
+            language: {
+                search: "Cari:",  // Label for search box
+                emptyTable: "Tidak ada data tersedia"  // Message when no data is found
+            }
         });
-    </script>
+    });
+</script>
+
     <script>
     document.getElementById('logoutModal').addEventListener('shown.bs.modal', function () {
         console.log("Logout modal displayed");
