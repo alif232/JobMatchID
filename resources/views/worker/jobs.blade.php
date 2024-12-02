@@ -130,7 +130,7 @@
                                                                 {{ $job->user->companyDetail->company_name ?? 'Nama Perusahaan' }}
                                                             </h6>
                                                             <p>{{ $job->user->companyDetail->company_address ?? 'Alamat perusahaan tidak tersedia' }}</p>
-                                                            <p>{{ Str::limit($job->jobdesk, 150, '...') }}</p>
+                                                            <p>{{ Str::limit($job->jobdesk) }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -162,7 +162,7 @@
                                                                 {{ $job->user->companyDetail->company_name ?? 'Nama Perusahaan' }}
                                                             </h6>
                                                             <p>{{ $job->user->companyDetail->company_address ?? 'Alamat perusahaan tidak tersedia' }}</p>
-                                                            <p>{{ Str::limit($job->jobdesk, 150, '...') }}</p>
+                                                            <p>{{ Str::limit($job->jobdesk) }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -189,7 +189,7 @@
                                                             {{ $job->user->companyDetail->company_name ?? 'Nama Perusahaan' }}
                                                         </h6>
                                                         <p>{{ $job->user->companyDetail->company_address ?? 'Alamat perusahaan tidak tersedia' }}</p>
-                                                        <p>{{ Str::limit($job->jobdesk, 150, '...') }}</p>
+                                                        <p>{{ Str::limit($job->jobdesk) }}</p>
                                                     </div>
                                                 </div>
                                             </div>

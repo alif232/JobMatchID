@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Jobs;
 use App\Http\Controllers\WorkerController;
 
 Route::get('/', function () {
@@ -13,9 +14,7 @@ Route::get('/aboutus', function () {
     return view('aboutus');
 });
 
-Route::get('/jobs', function () {
-    return view('jobs');
-});
+Route::get('/jobs', [Jobs::class, 'Jobs'])->name('jobs');
 
 Route::get('/login', function () {
     return redirect()->route('signin');

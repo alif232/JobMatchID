@@ -73,16 +73,6 @@
             <div class="col-md-7 col-lg-6 py-6 text-sm-start text-center">
                 <h1 class="mt-6 mb-sm-4 display-2 fw-semi-bold lh-sm fs-4 fs-lg-6 fs-xxl-8">Selamat Datang Di <br class="d-block d-lg-none d-xl-block" />JobMatchID</h1>
                 <p class="mb-4 fs-1">Membantu Anda Untuk Mencarikan Pekerjaan Yang Cocok Dengan CV Anda</p>
-                <div class="pt-3">
-                <form>
-                    <div class="input-group w-75 mx-auto">
-                    <!-- Search Input -->
-                    <input class="form-control form-control-lg rounded-start-pill shadow-lg border-0" id="formGroupExampleInput" type="text" placeholder="Search by skill, company, or job" />
-                    <!-- Search Button -->
-                    <button class="btn btn-primary btn-lg rounded-end-pill" type="button">Search</button>
-                    </div>
-                </form>
-                </div>
             </div>
             </div>
         </div>

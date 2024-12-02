@@ -77,7 +77,8 @@
                 <div class="row align-items-center min-vh-75 min-vh-md-100">
                     <div class="col-md-7 col-lg-6 py-6 text-sm-start text-center">
                         <h1 class="mt-6 mb-sm-4 display-2 fw-semi-bold lh-sm fs-4 fs-lg-6 fs-xxl-8">Selamat Datang Di
-                            <br class="d-block d-lg-none d-xl-block" />JobMatchID</h1>
+                            <br class="d-block d-lg-none d-xl-block" />JobMatchID
+                        </h1>
                         <p class="mb-4 fs-1">Membantu Anda Untuk Mencarikan Pekerjaan Yang Cocok Dengan CV Anda. Melamar
                             Hanya Dengan 1 Website Saja</p>
                         <div class="pt-3">
@@ -86,81 +87,86 @@
                     <div class="container">
                         <div class="row mb-4">
                             <!-- Search Field -->
-                            <div class="col-lg-8">
-                                <div class="input-group">
-                                    <input type="text" class="form-control form-control-lg"
-                                        placeholder="Search by skill, company, or job title">
-                                    <button class="btn btn-primary" type="button">Search</button>
-                                </div>
+                            <div class="col-lg-8 mb-4">
+                                <form action="{{ route('jobs') }}" method="GET">
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control form-control-lg"
+                                            placeholder="Search by skill, company, or job title"
+                                            value="{{ request('search') }}">
+                                        <button class="btn btn-primary" type="submit">Search</button>
+                                    </div>
+                                </form>
                             </div>
 
-                            <!-- Category Filter -->
-                            <div class="col-lg-4">
-                                <select class="form-select form-select-lg">
-                                    <option selected>Choose Category</option>
-                                    <option value="1">Engineering</option>
-                                    <option value="2">Design</option>
-                                    <option value="3">Marketing</option>
-                                    <!-- Add more categories as needed -->
-                                </select>
+                            @if($search)
+                            <!-- Search Results Section -->
+                            <h3>Search Results for "{{ $search }}"</h3>
+                            @if($jobs->isEmpty())
+                            <div class="alert alert-warning" role="alert">
+                                No jobs match your search query.
                             </div>
-                        </div>
-
-                        <!-- Job Listings -->
-                        <!-- /.row -->
-                        <div class="row">
+                            @else
+                            @foreach ($jobs as $job)
                             <div class="col-12 mb-4">
-                              <a href="#" class="text-decoration-none text-dark"></a>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="media d-flex align-items-start">
-                                            <img class="me-3 img-fluid w-25" src="home/assets/img/gallery/company-1.png"
-                                                alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="mt-0">Posisi</h5>
-                                                <h5 class="mt-0">Nama Perusahaan</h5> 
-                                                <p>Alamat perusahaan</p>
-                                                Deskripsi Pekerjaan
+                                <a href="{{ route('worker.jobs.show', $job->id_jobs) }}"
+                                    class="text-decoration-none text-dark">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="media d-flex align-items-start">
+                                                <img class="me-3 img-fluid w-25" style="width: 100%; height: 100px;"
+                                                    src="{{ asset('storage/' . $job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
+                                                    alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
+                                                <div class="media-body">
+                                                    <h5 class="mt-0">{{ $job->posisi }}</h5>
+                                                    <h6 class="mt-0">
+                                                        {{ $job->user->companyDetail->company_name ?? 'Nama Perusahaan' }}
+                                                    </h6>
+                                                    <p>{{ $job->user->companyDetail->company_address ?? 'Alamat perusahaan tidak tersedia' }}
+                                                    </p>
+                                                    <p>{{ Str::limit($job->jobdesk, 150, '...') }}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                              </a>
-                            </div>  
+                                </a>
+                            </div>
+                            @endforeach
+                            @endif
+                            @else
+                            <!-- Display All Jobs -->
+                            <h3>All Jobs</h3>
+                            @if($jobs->isEmpty())
+                            <div class="alert alert-warning" role="alert">
+                                No jobs available at the moment.
+                            </div>
+                            @else
+                            @foreach ($jobs as $job)
                             <div class="col-12 mb-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="media d-flex align-items-start">
-                                            <img class="me-3 img-fluid w-25" src="home/assets/img/gallery/company-2.png"
-                                                alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="mt-0">Posisi</h5>
-                                                <h5 class="mt-0">Nama Perusahaan</h5> 
-                                                <p>Alamat perusahaan</p>
-                                                Deskripsi Pekerjaan
+                                <a href="{{ route('worker.jobs.show', $job->id_jobs) }}"
+                                    class="text-decoration-none text-dark">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="media d-flex align-items-start">
+                                                <img class="me-3 img-fluid w-25" style="width: 100%; height: 100px;"
+                                                    src="{{ asset('storage/' . $job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
+                                                    alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
+                                                <div class="media-body">
+                                                    <h5 class="mt-0">{{ $job->posisi }}</h5>
+                                                    <h6 class="mt-0">
+                                                        {{ $job->user->companyDetail->company_name ?? 'Nama Perusahaan' }}
+                                                    </h6>
+                                                    <p>{{ $job->user->companyDetail->company_address ?? 'Alamat perusahaan tidak tersedia' }}
+                                                    </p>
+                                                    <p>{{ Str::limit($job->jobdesk, 150, '...') }}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
-                            <div class="col-12 mb-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="media d-flex align-items-start">
-                                            <img class="me-3 img-fluid w-25" src="home/assets/img/gallery/company-3.png"
-                                                alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="mt-0">Posisi</h5>
-                                                <h5 class="mt-0">Nama Perusahaan</h5> 
-                                                <p>Alamat perusahaan</p>
-                                                Deskripsi Pekerjaan
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            @endforeach
+                            @endif
+                            @endif
         </section>
 
         <section class="py-0 bg-primary-gradient">

@@ -121,29 +121,28 @@
 
                     <!-- User profile positioned to the right -->
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                @if ($companyDetail->logo_photo ?? false)
-                                <!-- User logo -->
-                                <img src="{{ asset('storage/' . $companyDetail->logo_photo) }}" alt="user"
-                                    class="rounded-circle" width="40">
-                                @endif
-                                <span class="ms-2 d-none d-lg-inline-block">
-                                    <span>Hello,</span>
-                                    <span class="text-dark">{{ $user->email }}</span>
-                                    <i data-feather="chevron-down" class="svg-icon"></i>
-                                </span>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <img src="{{ asset('storage/' . $companyDetail->logo_photo) }}" alt="user"
+                                class="rounded-circle" width="40">
+                            <span class="ms-2 d-none d-lg-inline-block">
+                                <span>Hello,</span>
+                                <span class="text-dark">{{ $user->email }}</span>
+                                <i data-feather="chevron-down" class="svg-icon"></i>
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end user-dd animated flipInY">
+                            <a class="dropdown-item" href="profile">
+                                <i data-feather="user" class="svg-icon me-2 ms-1"></i>
+                                My Profile
                             </a>
-                            <div class="dropdown-menu dropdown-menu-end user-dd animated flipInY">
-                                <a class="dropdown-item" href="profile">
-                                    <i data-feather="user" class="svg-icon me-2 ms-1"></i>
-                                    My Profile
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i data-feather="power" class="svg-icon me-2 ms-1"></i>Logout</a>
-                            </div>
-                        </li>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                <i data-feather="power" class="svg-icon me-2 ms-1"></i>Logout
+                            </a>
+                        </div>
+                    </li>
                     </ul>
                 </div>
             </nav>
@@ -426,19 +425,19 @@
         const dropdown = document.getElementById(`dropdownMenu${jobId}`);
         const isVisible = dropdown.style.display === 'block';
 
-        // Sembunyikan semua dropdown lain
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        // Sembunyikan semua dropdown posisi lain
+        document.querySelectorAll('.dropdown-container .dropdown-menu').forEach(menu => {
             menu.style.display = 'none';
         });
 
-        // Tampilkan atau sembunyikan dropdown yang diklik
+        // Tampilkan atau sembunyikan dropdown posisi yang diklik
         dropdown.style.display = isVisible ? 'none' : 'block';
     }
 
-    // Sembunyikan dropdown jika klik di luar
+    // Sembunyikan semua dropdown posisi jika klik di luar dropdown posisi
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.dropdown-container')) {
-            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            document.querySelectorAll('.dropdown-container .dropdown-menu').forEach(menu => {
                 menu.style.display = 'none';
             });
         }
