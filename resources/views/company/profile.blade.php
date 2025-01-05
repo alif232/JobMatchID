@@ -77,7 +77,7 @@
                                 aria-haspopup="true" aria-expanded="false">
                                 @if ($companyDetail->logo_photo ?? false)
                                 <!-- User logo -->
-                                <img src="{{ asset('storage/' . $companyDetail->logo_photo) }}" alt="user"
+                                <img src="{{ asset($companyDetail->logo_photo) }}" alt="user"
                                     class="rounded-circle" width="40">
                                 @endif
                                 <span class="ms-2 d-none d-lg-inline-block">
@@ -160,9 +160,9 @@
                                         <div class="card-header text-bg-primary">Company Profile</div>
                                         <div class="card-body">
                                             <div class="text-center mb-3">
-                                                <img src="{{ asset('storage/' . $companyDetail->logo_photo ?? 'default-avatar.jpg') }}"
+                                                <img src="{{ asset($companyDetail->logo_photo ?? 'default-avatar.jpg') }}"
                                                     class="img-fluid rounded-circle" alt="Company Logo"
-                                                    style="width: 140px; height: 150px;">
+                                                    style="width: 100%; height: 150px;">
                                             </div>
                                             <h5 class="text-center mb-1">
                                                 {{ $companyDetail->company_name ?? 'Unknown Company' }}</h5>
@@ -262,10 +262,10 @@
                                                     <label class="col-12 form-label m-0">Logo Perusahaan</label>
                                                     <div class="col-12">
                                                         @if ($companyDetail->logo_photo ?? false)
-                                                        <img src="{{ asset('storage/' . $companyDetail->logo_photo) }}"
+                                                        <img src="{{ asset($companyDetail->logo_photo) }}"
                                                             class="img-fluid" alt="Logo Perusahaan"
                                                             id="profileImagePreview"
-                                                            style="width: 140px; height: 140px; object-fit: cover;">
+                                                            style="width: 150; height: 140px; object-fit: cover;">
                                                         @else
                                                         <img src="{{ asset('assets/img/default-avatar.jpg') }}"
                                                             class="img-fluid" alt="Default Logo"

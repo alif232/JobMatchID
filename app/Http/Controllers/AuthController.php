@@ -32,10 +32,9 @@ class AuthController extends Controller
         ]);
 
         try {
-            // Create user with bcrypt hashing for password
             User::create([
                 'email' => $request->email,
-                'password' => Hash::make($request->password), // Use bcrypt (Hash::make) for secure hashing
+                'password' => Hash::make($request->password),
                 'level' => $request->level,
             ]);
 
@@ -53,18 +52,13 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Retrieve user by email
         $user = User::where('email', $request->email)->first();
 
-        // Check if user exists and password is correct
         if ($user && Hash::check($request->password, $user->password)) {
-            // Log the user in
             Auth::login($user);
         
-            // Set session variable
             $request->session()->put('logged_in', true);
 
-            // Redirect based on user role
             if ($user->level == 'worker') {
                 return redirect()->route('worker.dashboard');
             } elseif ($user->level == 'company') {
@@ -72,7 +66,6 @@ class AuthController extends Controller
             }
         }
 
-        // If login fails
         return redirect('/signin')->withErrors(['login_error' => 'Invalid email or password']);
     }
 

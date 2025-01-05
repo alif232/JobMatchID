@@ -83,7 +83,7 @@
                 <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto pt-2 pt-lg-0">
                         <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page"
-                                href="dashboard">Home</a></li>
+                                href="../dashboard">Home</a></li>
                         <li class="nav-item px-2"><a class="nav-link fw-medium" href="../jobs">Jobs</a></li>
                         <li class="nav-item px-2"><a class="nav-link fw-medium" href="../aboutus">About Us</a></li>
                         <li class="nav-item px-2"><a class="nav-link fw-medium" href="../lamaran">Lamaran</a></li>
@@ -117,7 +117,7 @@
                             <div class="card-body">
                                 <div class="media d-flex align-items-center">
                                     <img class="me-3 img-fluid w-25" style="width: 100px; height: 100px;"
-                                        src="{{ asset('storage/' . ($job->user->companyDetail->logo_photo ?? 'default-logo.png')) }}"
+                                        src="{{ asset($job->user->companyDetail->logo_photo ?? 'default-logo.png')}}"
                                         alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
                                     <div class="media-body">
                                         <h4 class="mt-0">

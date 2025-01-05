@@ -122,7 +122,7 @@
                                                 <div class="card-body">
                                                     <div class="media d-flex align-items-start">
                                                         <img class="me-3 img-fluid w-25" style="width: 100%; height: 100px;"
-                                                            src="{{ asset('storage/' . $job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
+                                                            src="{{ asset($job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
                                                             alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
                                                         <div class="media-body">
                                                             <h5 class="mt-0">{{ $job->posisi }}</h5>
@@ -154,7 +154,7 @@
                                                 <div class="card-body">
                                                     <div class="media d-flex align-items-start">
                                                         <img class="me-3 img-fluid w-25" style="width: 100%; height: 100px;"
-                                                            src="{{ asset('storage/' . $job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
+                                                            src="{{ asset($job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
                                                             alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
                                                         <div class="media-body">
                                                             <h5 class="mt-0">{{ $job->posisi }}</h5>
@@ -181,7 +181,7 @@
                                             <div class="card-body">
                                                 <div class="media d-flex align-items-start">
                                                     <img class="me-3 img-fluid w-25" style="width: 100%; height: 100px;"
-                                                        src="{{ asset('storage/' . $job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
+                                                        src="{{ asset($job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
                                                         alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
                                                     <div class="media-body">
                                                         <h5 class="mt-0">{{ $job->posisi }}</h5>

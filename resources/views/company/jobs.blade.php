@@ -124,7 +124,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
-                            <img src="{{ asset('storage/' . $companyDetail->logo_photo) }}" alt="user"
+                            <img src="{{ asset($companyDetail->logo_photo) }}" alt="user"
                                 class="rounded-circle" width="40">
                             <span class="ms-2 d-none d-lg-inline-block">
                                 <span>Hello,</span>

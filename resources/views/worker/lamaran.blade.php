@@ -42,7 +42,7 @@
     <!--    Main Content-->
     <!-- ===============================================-->
     <main class="main" id="top">
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 backdrop"
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 backdrop"
             data-navbar-on-scroll="data-navbar-on-scroll">
             <div class="container"><a class="navbar-brand d-flex align-items-center fw-bolder fs-2 fst-italic" href="#">
                     <div class="text-info">JOB</div>
@@ -52,7 +52,7 @@
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation"><span
                         class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse mt-4 mt-lg-0" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto pt-2 pt-lg-0">
                         <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page"
                                 href="dashboard">Home</a></li>
@@ -61,7 +61,8 @@
                         <li class="nav-item px-2"><a class="nav-link fw-medium" href="lamaran">Lamaran</a></li>
                         <li class="nav-item px-2"><a class="nav-link fw-medium" href="profile">Profile</a></li>
                         <li class="nav-item px-2">
-                            <a class="nav-link fw-medium" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+                            <a class="nav-link fw-medium" href="#" data-bs-toggle="modal"
+                                data-bs-target="#logoutModal">Logout</a>
                         </li>
                     </ul>
                 </div>

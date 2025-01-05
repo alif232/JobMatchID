@@ -39,7 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/company/kelolajobs/delete/{id}', [CompanyController::class, 'delete'])->name('jobs.delete');
     Route::get('/company/datapelamar', [CompanyController::class, 'pelamar'])->name('pelamar');
     Route::get('/company/datapelamar/detail/{id}', [CompanyController::class, 'detail'])->name('pelamar.detail');
-    Route::get('/storage/{filename}', [CompanyController::class, 'showPdf'])->name('cv.show');
+    Route::get('/simpan/{filename}', [CompanyController::class, 'showPdf'])->name('cv.show');
     Route::post('/process/application/{id}', [CompanyController::class, 'processApplication'])->name('process.application');
 
     Route::get('/worker/dashboard', [WorkerController::class, 'workerDashboard'])->name('worker.dashboard'); 

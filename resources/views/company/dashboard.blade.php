@@ -79,7 +79,7 @@
                                 aria-haspopup="true" aria-expanded="false">
                                 @if ($companyDetail->logo_photo ?? false)
                                 <!-- User logo -->
-                                <img src="{{ asset('storage/' . $companyDetail->logo_photo) }}" alt="user"
+                                <img src="{{ asset($companyDetail->logo_photo) }}" alt="user"
                                     class="rounded-circle" width="40">
                                 @endif
                                 <span class="ms-2 d-none d-lg-inline-block">

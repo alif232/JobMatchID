@@ -17,16 +17,13 @@ use Illuminate\Support\Facades\DB;
 
 class CompanyController extends Controller
 {
-    // Function to show the company dashboard
     public function companyDashboard(Request $request)
     {
         $user = Auth::user();
         $companyDetail = $user->companyDetail;
 
-        // Get job IDs for the current user (company)
         $jobIds = Job::where('id_user', $user->id_user)->pluck('id_jobs');
 
-        // Count applicants with "Diterima" and "Ditolak" status
         $pelamarDiterima = LamarStatus::whereIn('id_lamar', function ($query) use ($jobIds) {
             $query->select('id_lamar')
                 ->from('lamar')
@@ -43,7 +40,6 @@ class CompanyController extends Controller
         ->where('status', 'Ditolak')
         ->count();
 
-        // Get total applicants for the jobs posted by the current user
         $totalPelamar = LamarStatus::whereIn('id_lamar', function ($query) use ($jobIds) {
             $query->select('id_lamar')
                 ->from('lamar')
@@ -53,16 +49,14 @@ class CompanyController extends Controller
         ->count();
 
         if ($request->ajax()) {
-            // Get Pelamar data for jobs uploaded by the logged-in company user
             $data = Pelamar::with(['workerDetail', 'status' => function ($query) {
-                $query->latest('created_at'); // Get the latest status for each application
-            }, 'job']) // Include related models (workerDetail, status, Job)
-            ->whereIn('id_jobs', $jobIds); // Filter by the jobs owned by the company
+                $query->latest('created_at');
+            }, 'job'])
+            ->whereIn('id_jobs', $jobIds); 
 
             return DataTables::of($data)
-                ->addIndexColumn() // Add automatic index
+                ->addIndexColumn() 
                 ->editColumn('status', function ($row) {
-                    // Get the latest status from the status model
                     $latestStatus = $row->status->first();
                     if ($latestStatus) {
                         switch ($latestStatus->status) {
@@ -79,18 +73,15 @@ class CompanyController extends Controller
                     return '<span class="badge bg-secondary">Belum Ada Status</span>';
                 })
                 ->editColumn('tanggal', function ($row) {
-                    // Format the date (d-m-Y)
                     return \Carbon\Carbon::parse($row->tanggal)->format('d-m-Y');
                 })
                 ->editColumn('nama', function ($row) {
-                    // Access related WorkerDetail to show applicant's name
                     return $row->workerDetail ? $row->workerDetail->nama : '-';
                 })
                 ->editColumn('posisi', function ($row) {
-                    // Access related Job to show position
                     return $row->job ? $row->job->posisi : '-';
                 })
-                ->rawColumns(['status']) // Make status column render HTML
+                ->rawColumns(['status']) 
                 ->make(true);
         }
 
@@ -114,7 +105,7 @@ class CompanyController extends Controller
             'company_name' => 'required|string|max:255',
             'company_address' => 'required|string',
             'phone_number' => 'required|string',
-            'email' => 'required|email|string' ,
+            'email' => 'required|email|string',
             'description' => 'nullable|string',
             'logo_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -122,22 +113,39 @@ class CompanyController extends Controller
         // Retrieve the authenticated user
         $user = Auth::user();
 
-        if(!$user) {
+        if (!$user) {
             return redirect()->back()->withErrors(['error' => 'User is not authenticated']);
         }
 
-        // Initialize the logo path as null in case no new photo is uploaded
-        $logoPath = null;
+        // Initialize the logo path
+        $logoPath = $user->companyDetail->logo_photo ?? null;
 
-        // Handle logo photo upload if it exists
         if ($request->hasFile('logo_photo')) {
-            // Delete the old logo if it exists
-            if ($user->companyDetail && $user->companyDetail->logo_photo) {
-                Storage::delete('public/' . $user->companyDetail->logo_photo);
-            }
+            $uploadedFile = $request->file('logo_photo');
 
-            // Store the new logo photo
-            $logoPath = $request->file('logo_photo')->store('img/company', 'public');
+            // Define the destination path
+            $destinationPath = public_path('simpan/profile/company');
+            $fileName = time() . '_' . $uploadedFile->getClientOriginalName();
+
+            try {
+                // Ensure the destination directory exists
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0777, true);
+                }
+
+                // Delete the old logo if it exists
+                if ($logoPath && file_exists(public_path($logoPath))) {
+                    unlink(public_path($logoPath));
+                }
+
+                // Move the uploaded file to the destination folder
+                $uploadedFile->move($destinationPath, $fileName);
+
+                // Set the new logo path
+                $logoPath = 'simpan/profile/company/' . $fileName;
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['error' => 'Failed to upload the new photo.']);
+            }
         }
 
         // Update or create company details
@@ -149,7 +157,7 @@ class CompanyController extends Controller
                 'phone_number' => $request->phone_number,
                 'email' => $request->email,
                 'description' => $request->description,
-                'logo_photo' => $logoPath ?? $user->companyDetail->logo_photo ?? null,
+                'logo_photo' => $logoPath,
             ]
         );
 
@@ -188,7 +196,6 @@ class CompanyController extends Controller
         if ($request->ajax()) {
             $jobs = Job::where('id_user', Auth::id());
 
-            // Filter hanya berdasarkan kolom 'posisi'
             if (!empty($request->get('search')['value'])) {
                 $search = $request->get('search')['value'];
                 $jobs = $jobs->where('posisi', 'like', "%{$search}%");
@@ -209,7 +216,7 @@ class CompanyController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['posisi']) // Memastikan kolom posisi diproses sebagai HTML
+                ->rawColumns(['posisi']) 
                 ->make(true);
         }
 
@@ -219,7 +226,6 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the incoming request data
         $request->validate([
             'posisi' => 'required|string|max:255',
             'kualifikasi' => 'required|string|max:255',
@@ -227,16 +233,14 @@ class CompanyController extends Controller
             'benefit' => 'required|string',
         ]);
 
-        // Create a new job record with the logged-in user ID
         Job::create([
-            'id_user' => Auth::id(),  // Set the id_user to the logged-in user's ID
+            'id_user' => Auth::id(), 
             'posisi' => $request->posisi,
             'kualifikasi' => $request->kualifikasi,
             'jobdesk' => $request->jobdesk,
             'benefit' => $request->benefit,
         ]);
 
-        // Redirect back with a success message
         return redirect()->route('company.jobs')->with('success', 'Job created successfully!');
     }
 

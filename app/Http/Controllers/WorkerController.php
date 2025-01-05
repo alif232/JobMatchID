@@ -200,7 +200,7 @@ class WorkerController extends Controller
             'nama' => 'required|string|max:255',
             'tgllahir' => 'required|string',
             'alamat' => 'required|string',
-            'notelp' => 'required|string' ,
+            'notelp' => 'required|string',
             'deskripsi' => 'nullable|string',
             'link' => 'nullable|string',
             'logo_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -209,27 +209,44 @@ class WorkerController extends Controller
         // Retrieve the authenticated user
         $user = Auth::user();
 
-        if(!$user) {
+        if (!$user) {
             return redirect()->back()->withErrors(['error' => 'User is not authenticated']);
         }
 
-        // Initialize the logo path as null in case no new photo is uploaded
-        $logoPath = null;
+        // Path penyimpanan gambar default
+        $logoPath = $user->workerDetail->logo_photo ?? null;
 
-        // Handle logo photo upload if it exists
         if ($request->hasFile('logo_photo')) {
-            // Delete the old logo if it exists
-            if ($user->workerDetail && $user->workerDetail->logo_photo) {
-                Storage::delete('public/' . $user->workerDetail->logo_photo);
-            }
+            $uploadedFile = $request->file('logo_photo');
 
-            // Store the new logo photo
-            $logoPath = $request->file('logo_photo')->store('img/worker', 'public');
+            // Tentukan path tujuan penyimpanan
+            $destinationPath = public_path('simpan/profile/worker');
+            $fileName = time() . '_' . $uploadedFile->getClientOriginalName();
+
+            try {
+                // Pastikan folder tujuan ada
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0777, true);
+                }
+
+                // Hapus logo lama jika ada
+                if ($logoPath && file_exists(public_path($logoPath))) {
+                    unlink(public_path($logoPath));
+                }
+
+                // Simpan gambar baru ke folder tujuan
+                $uploadedFile->move($destinationPath, $fileName);
+
+                // Perbarui path logo
+                $logoPath = 'simpan/profile/worker/' . $fileName;
+            } catch (\Exception $e) {
+                return redirect()->back()->withErrors(['error' => 'Gagal mengunggah foto baru.']);
+            }
         }
 
-        // Update or create company details
+        // Perbarui atau buat detail pekerja
         $workerDetail = WorkerDetail::updateOrCreate(
-            ['user_id' => Auth::id()], // Search for the existing record
+            ['user_id' => Auth::id()], // Cari data yang sesuai dengan user_id
             [
                 'nama' => $request->nama,
                 'tgllahir' => $request->tgllahir,
@@ -237,7 +254,7 @@ class WorkerController extends Controller
                 'notelp' => $request->notelp,
                 'deskripsi' => $request->deskripsi,
                 'link' => $request->link,
-                'logo_photo' => $logoPath ?? $user->workerDetail->logo_photo ?? null,
+                'logo_photo' => $logoPath,
             ]
         );
 
@@ -341,47 +358,61 @@ class WorkerController extends Controller
     }
 
     public function apply(Request $request, $id)
-    {
-        $request->validate([
-            'cv' => 'required|mimes:pdf|max:2048', // Hanya file PDF yang diizinkan
-            'link' => 'nullable|url',
-        ]);
+{
+    $request->validate([
+        'cv' => 'required|mimes:pdf|max:2048', // Hanya file PDF yang diizinkan
+        'link' => 'nullable|url',
+    ]);
 
-        $user = Auth::user();
+    $user = Auth::user();
 
-        // Ambil nama pelamar untuk digunakan sebagai nama file
-        $workerDetail = $user->workerDetail;
-        $pelamarName = $workerDetail->nama ?? 'pelamar';
+    // Ambil nama pelamar untuk digunakan sebagai nama file
+    $workerDetail = $user->workerDetail;
+    $pelamarName = $workerDetail->nama ?? 'pelamar';
 
-        // Buat nama file CV dengan format cv(nama).pdf
-        $formattedName = str_replace(' ', '_', strtolower($pelamarName)); // Ganti spasi dengan underscore
-        $cvFileName = 'cv(' . $formattedName . ').pdf';
+    // Buat nama file CV dengan format cv(nama).pdf
+    $formattedName = str_replace(' ', '_', strtolower($pelamarName)); // Ganti spasi dengan underscore
+    $cvFileName = 'cv(' . $formattedName . ').pdf';
 
-        // Simpan file CV dengan nama yang sudah diformat ke storage
-        $cvPath = $request->file('cv')->storeAs('cv', $cvFileName, 'public');
+    // Tentukan path penyimpanan CV
+    $destinationPath = public_path('simpan/cv');
+    $cvPath = 'simpan/cv/' . $cvFileName;
 
-        // Simpan data lamaran ke tabel `lamar`
-        $lamar = Pelamar::create([
-            'id_user' => $user->id_user,
-            'id_jobs' => $id,
-            'cv' => $cvPath,
-            'link' => $request->link,
-            'tanggal' => now(),
-        ]);
-
-        // Periksa apakah data berhasil disimpan
-        if ($lamar && $lamar->id_lamar) {
-            // Simpan status awal ke tabel `lamar_status`
-            LamarStatus::create([
-                'id_user' => $user->id_user,
-                'id_lamar' => $lamar->id_lamar, // Ambil ID dari Pelamar
-                'status' => 'Pending',
-                'note' => null,
-            ]);
-        } else {
-            return redirect()->route('worker.jobs')->withErrors('Gagal menyimpan lamaran.');
+    try {
+        // Pastikan folder tujuan ada
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
         }
 
-        return redirect()->route('worker.jobs')->with('success', 'Lamaran berhasil dikirim.');
+        // Simpan file CV di folder tujuan
+        $request->file('cv')->move($destinationPath, $cvFileName);
+    } catch (\Exception $e) {
+        return redirect()->route('worker.jobs')->withErrors('Gagal mengunggah CV: ' . $e->getMessage());
     }
+
+    // Simpan data lamaran ke tabel `lamar`
+    $lamar = Pelamar::create([
+        'id_user' => $user->id_user,
+        'id_jobs' => $id,
+        'cv' => $cvPath, // Simpan path relatif
+        'link' => $request->link,
+        'tanggal' => now(),
+    ]);
+
+    // Periksa apakah data berhasil disimpan
+    if ($lamar && $lamar->id_lamar) {
+        // Simpan status awal ke tabel `lamar_status`
+        LamarStatus::create([
+            'id_user' => $user->id_user,
+            'id_lamar' => $lamar->id_lamar, // Ambil ID dari Pelamar
+            'status' => 'Pending',
+            'note' => null,
+        ]);
+    } else {
+        return redirect()->route('worker.jobs')->withErrors('Gagal menyimpan lamaran.');
+    }
+
+    return redirect()->route('worker.jobs')->with('success', 'Lamaran berhasil dikirim.');
+}
+
 }

@@ -100,7 +100,7 @@
                                         <div class="card-header text-bg-primary">Worker Profile</div>
                                         <div class="card-body">
                                             <div class="text-center mb-3">
-                                                <img src="{{ asset('storage/' . $workerDetail->logo_photo ?? 'default-avatar.jpg') }}"
+                                                <img src="{{ asset($workerDetail->logo_photo ?? 'default-avatar.jpg') }}"
                                                     class="img-fluid rounded-circle" alt="Company Logo"
                                                     style="width: 140px; height: 150px;">
                                             </div>
@@ -278,7 +278,7 @@
                                                         <label class="col-12 form-label m-0">Profile Image</label>
                                                         <div class="col-12">
                                                             @if ($workerDetail->logo_photo ?? false)
-                                                            <img src="{{ asset('storage/' . $workerDetail->logo_photo) }}"
+                                                            <img src="{{ asset($workerDetail->logo_photo) }}"
                                                                 class="img-fluid" alt="Logo Perusahaan"
                                                                 id="profileImagePreview"
                                                                 style="width: 140px; height: 140px; object-fit: cover;">
