@@ -12,9 +12,9 @@ JobMatchID adalah aplikasi pencarian lowongan pekerjaan dan platform untuk melam
 ## Screenshoot Aplikasi
 
 <img src="https://alif.infonering.com/portofolio/jobmatchid/JobMatchID1.png" width="400" alt="Laravel Logo">
-<img src="../../public/readme/JobmatchID2" width="400" alt="Laravel Logo">
-<img src="../../public/readme/JobmatchID3" width="400" alt="Laravel Logo">
-<img src="../../public/readme/JobmatchID4" width="400" alt="Laravel Logo">
-<img src="../../public/readme/JobmatchID5" width="400" alt="Laravel Logo">
-<img src="../../public/readme/JobmatchID6" width="400" alt="Laravel Logo">
-<img src="../../public/readme/JobmatchID7" width="400" alt="Laravel Logo">
+<img src="https://alif.infonering.com/portofolio/jobmatchid/JobMatchID2.png" width="400" alt="Laravel Logo">
+<img src="https://alif.infonering.com/portofolio/jobmatchid/JobMatchID3.png" width="400" alt="Laravel Logo">
+<img src="https://alif.infonering.com/portofolio/jobmatchid/JobMatchID4.png" width="400" alt="Laravel Logo">
+<img src="https://alif.infonering.com/portofolio/jobmatchid/JobMatchID5.png" width="400" alt="Laravel Logo">
+<img src="https://alif.infonering.com/portofolio/jobmatchid/JobMatchID6.png" width="400" alt="Laravel Logo">
+<img src="https://alif.infonering.com/portofolio/jobmatchid/JobMatchID7.png" width="400" alt="Laravel Logo">
