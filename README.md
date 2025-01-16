@@ -11,7 +11,7 @@ JobMatchID adalah aplikasi pencarian lowongan pekerjaan dan platform untuk melam
 
 ## Screenshoot Aplikasi
 
-<img src="../../public/readme/JobmatchID1" width="400" alt="Laravel Logo">
+<img src="https://alif.infonering.com/portofolio/jobmatchid/JobMatchID1.png" width="400" alt="Laravel Logo">
 <img src="../../public/readme/JobmatchID2" width="400" alt="Laravel Logo">
 <img src="../../public/readme/JobmatchID3" width="400" alt="Laravel Logo">
 <img src="../../public/readme/JobmatchID4" width="400" alt="Laravel Logo">
