@@ -86,8 +86,8 @@
                     </div>
                     <div class="container">
                         <div class="row mb-4">
-                            <!-- Search Field -->
-                            <div class="col-lg-8 mb-4">
+                            <!-- Search Form -->
+                            <div class="col-lg-6 mb-4">
                                 <form action="{{ route('jobs') }}" method="GET">
                                     <div class="input-group">
                                         <input type="text" name="search" class="form-control form-control-lg"
@@ -98,75 +98,110 @@
                                 </form>
                             </div>
 
-                            @if($search)
-                            <!-- Search Results Section -->
-                            <h3>Search Results for "{{ $search }}"</h3>
-                            @if($jobs->isEmpty())
-                            <div class="alert alert-warning" role="alert">
-                                No jobs match your search query.
+                            <!-- Filter Form -->
+                            <div class="col-lg-6 mb-4">
+                                <form action="{{ route('jobs') }}" method="GET">
+                                    <div class="input-group">
+                                        <select name="experience" class="form-select form-select-lg">
+                                            <option value="">Pilih Pengalaman</option>
+                                            <option value="Fresh Graduate"
+                                                {{ request('experience') == 'Fresh Graduate' ? 'selected' : '' }}>Fresh
+                                                Graduate</option>
+                                            <option value="1 Tahun"
+                                                {{ request('experience') == '1 Tahun' ? 'selected' : '' }}>1 Tahun
+                                            </option>
+                                            <option value="2 Tahun"
+                                                {{ request('experience') == '2 Tahun' ? 'selected' : '' }}>2 Tahun
+                                            </option>
+                                            <option value="3 Tahun"
+                                                {{ request('experience') == '3 Tahun' ? 'selected' : '' }}>3 Tahun
+                                            </option>
+                                            <option value="4 Tahun"
+                                                {{ request('experience') == '4 Tahun' ? 'selected' : '' }}>4 Tahun
+                                            </option>
+                                            <option value="5 Tahun"
+                                                {{ request('experience') == '5 Tahun' ? 'selected' : '' }}>5 Tahun
+                                            </option>
+                                        </select>
+                                        <button class="btn btn-primary" type="submit">Filter</button>
+                                        @if(request('experience'))
+                                            <a href="{{ route('jobs') }}" class="btn btn-danger">Reset</a>
+                                        @endif
+                                    </div>
+                                </form>
                             </div>
-                            @else
-                            @foreach ($jobs as $job)
-                            <div class="col-12 mb-4">
-                                <a href="{{ route('worker.jobs.show', $job->id_jobs) }}"
-                                    class="text-decoration-none text-dark">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="media d-flex align-items-start">
-                                                <img class="me-3 img-fluid w-25" style="width: 100%; height: 100px;"
-                                                    src="{{ asset($job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
-                                                    alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
-                                                <div class="media-body">
-                                                    <h5 class="mt-0">{{ $job->posisi }}</h5>
-                                                    <h6 class="mt-0">
-                                                        {{ $job->user->companyDetail->company_name ?? 'Nama Perusahaan' }}
-                                                    </h6>
-                                                    <p>{{ $job->user->companyDetail->company_address ?? 'Alamat perusahaan tidak tersedia' }}
-                                                    </p>
-                                                    <p>{{ Str::limit($job->jobdesk, 150, '...') }}</p>
-                                                </div>
-                                            </div>
+                        </div>
+                    </div>
+
+
+                    @if($search)
+                    <!-- Search Results Section -->
+                    <h3>Search Results for "{{ $search }}"</h3>
+                    @if($jobs->isEmpty())
+                    <div class="alert alert-warning" role="alert">
+                        No jobs match your search query.
+                    </div>
+                    @else
+                    @foreach ($jobs as $job)
+                    <div class="col-12 mb-4">
+                        <a href="{{ route('worker.jobs.show', $job->id_jobs) }}" class="text-decoration-none text-dark">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-start">
+                                        <img class="me-3 img-fluid w-25" style="width: 100%; height: 100px;"
+                                            src="{{ asset($job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
+                                            alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
+                                        <div class="media-body">
+                                            <h5 class="mt-0">{{ $job->posisi }}</h5>
+                                            <h6 class="mt-0">
+                                                {{ $job->user->companyDetail->company_name ?? 'Nama Perusahaan' }}
+                                            </h6>
+                                            <p>{{ $job->user->companyDetail->company_address ?? 'Alamat perusahaan tidak tersedia' }}
+                                            </p>
+                                            <p>{!! nl2br(e(Str::limit($job->kualifikasi))) !!}</p>
                                         </div>
                                     </div>
-                                </a>
+                                </div>
                             </div>
-                            @endforeach
-                            @endif
-                            @else
-                            <!-- Display All Jobs -->
-                            <h3>All Jobs</h3>
-                            @if($jobs->isEmpty())
-                            <div class="alert alert-warning" role="alert">
-                                No jobs available at the moment.
-                            </div>
-                            @else
-                            @foreach ($jobs as $job)
-                            <div class="col-12 mb-4">
-                                <a href="{{ route('worker.jobs.show', $job->id_jobs) }}"
-                                    class="text-decoration-none text-dark">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="media d-flex align-items-start">
-                                                <img class="me-3 img-fluid w-25" style="width: 100%; height: 100px;"
-                                                    src="{{ asset($job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
-                                                    alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
-                                                <div class="media-body">
-                                                    <h5 class="mt-0">{{ $job->posisi }}</h5>
-                                                    <h6 class="mt-0">
-                                                        {{ $job->user->companyDetail->company_name ?? 'Nama Perusahaan' }}
-                                                    </h6>
-                                                    <p>{{ $job->user->companyDetail->company_address ?? 'Alamat perusahaan tidak tersedia' }}
-                                                    </p>
-                                                    <p>{{ Str::limit($job->jobdesk, 150, '...') }}</p>
-                                                </div>
-                                            </div>
+                        </a>
+                    </div>
+                    @endforeach
+                    @endif
+                    @else
+                    <!-- Display All Jobs -->
+                    <h3>All Jobs</h3>
+                    @if($jobs->isEmpty())
+                    <div class="alert alert-warning" role="alert">
+                        No jobs available at the moment.
+                    </div>
+                    @else
+                    @foreach ($jobs as $job)
+                    <div class="col-12 mb-4">
+                        <a href="{{ route('worker.jobs.show', $job->id_jobs) }}" class="text-decoration-none text-dark">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="media d-flex align-items-start">
+                                        <img class="me-3 img-fluid w-25" style="width: 100%; height: 100px;"
+                                            src="{{ asset($job->user->companyDetail->logo_photo ?? 'default-logo.png') }}"
+                                            alt="Logo {{ $job->user->companyDetail->company_name ?? 'Perusahaan' }}">
+                                        <div class="media-body">
+                                            <h5 class="mt-0">{{ $job->posisi }}</h5>
+                                            <h6 class="mt-0">
+                                                {{ $job->user->companyDetail->company_name ?? 'Nama Perusahaan' }}
+                                            </h6>
+                                            <p>{{ $job->user->companyDetail->company_address ?? 'Alamat perusahaan tidak tersedia' }}
+                                            </p>
+                                            <p>{!! nl2br(e(Str::limit($job->kualifikasi))) !!}</p>
                                         </div>
                                     </div>
-                                </a>
+                                </div>
                             </div>
-                            @endforeach
-                            @endif
-                            @endif
+                        </a>
+                    </div>
+                    @endforeach
+                    @endif
+                    @endif
+
         </section>
 
         <section class="py-0 bg-primary-gradient">

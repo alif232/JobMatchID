@@ -137,7 +137,7 @@
                                         <p class="mb-1">
                                             <strong>Deskripsi:</strong>
                                         <p class="mb-0">
-                                            {{ $job->user->companyDetail->description ?? 'Deskripsi tidak tersedia' }}
+                                            {!! nl2br(e($job->user->companyDetail->description ?? 'Deskripsi tidak tersedia')) !!}
                                         </p>
                                         </p>
                                     </div>
@@ -152,17 +152,19 @@
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="mb-3">{{ $job->posisi }}</h3>
+
                                 <p><strong>Deskripsi Pekerjaan:</strong></p>
-                                <p>{{ $job->jobdesk }}</p>
+                                <p>{!! nl2br(e($job->jobdesk)) !!}</p>
 
                                 <p><strong>Kualifikasi:</strong></p>
-                                <p>{{ $job->kualifikasi }}</p>
+                                <p>{!! nl2br(e($job->kualifikasi)) !!}</p>
 
                                 <p><strong>Benefit:</strong></p>
-                                <p>{{ $job->benefit }}</p>
+                                <p>{!! nl2br(e($job->benefit)) !!}</p>
                             </div>
                         </div>
                     </div>
+
 
                     <!-- Logout Confirmation Modal -->
                     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel"

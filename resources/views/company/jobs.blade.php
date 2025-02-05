@@ -249,19 +249,19 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="editPosisi" class="form-label">Posisi</label>
-                                    <input type="text" class="form-control" id="editPosisi" name="posisi" required>
+                                    <input type="text" class="form-control" id="editPosisi" name="posisi" placeholder="Masukkan Nama Posisi" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editKualifikasi" class="form-label">Kualifikasi</label>
-                                    <textarea class="form-control" id="editKualifikasi" name="kualifikasi" required></textarea>
+                                    <textarea class="form-control" id="editKualifikasi" name="kualifikasi" placeholder="Masukkan Kualifikasi Pekerjaan" required></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editJobdesk" class="form-label">Jobdesk</label>
-                                    <textarea class="form-control" id="editJobdesk" name="jobdesk" required></textarea>
+                                    <textarea class="form-control" id="editJobdesk" name="jobdesk" placeholder="Masukkan Jobdesk Pekerjaan" required></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="editBenefit" class="form-label">Benefit</label>
-                                    <textarea class="form-control" id="editBenefit" name="benefit" required></textarea>
+                                    <textarea class="form-control" id="editBenefit" name="benefit" placeholder="Masukkan Benefit Pekerjaan" required></textarea>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -318,20 +318,20 @@
                         @csrf
                         <div class="mb-3">
                             <label for="posisi" class="form-label">Posisi</label>
-                            <input type="text" class="form-control" id="posisi" name="posisi" required>
+                            <input type="text" class="form-control" id="posisi" name="posisi" placeholder="Masukkan Nama Posisi" required>
                         </div>
                         <div class="mb-3">
                             <label for="kualifikasi" class="form-label">Kualifikasi</label>
-                            <textarea class="form-control" id="kualifikasi" name="kualifikasi" rows="3"
+                            <textarea class="form-control" id="kualifikasi" name="kualifikasi" placeholder="Masukkan Kualifikasi Pekerjaan" rows="3"
                                 required></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="jobdesk" class="form-label">Jobdesk</label>
-                            <textarea class="form-control" id="jobdesk" name="jobdesk" rows="3" required></textarea>
+                            <textarea class="form-control" id="jobdesk" name="jobdesk" rows="3" placeholder="Masukkan Jobdesk Pekerjaan" required></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="benefit" class="form-label">Benefit</label>
-                            <textarea class="form-control" id="benefit" name="benefit" rows="3" required></textarea>
+                            <textarea class="form-control" id="benefit" name="benefit" rows="3" placeholder="Masukkan Benefit Pekerjaan" required></textarea>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -394,30 +394,52 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#jobsTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "{{ route('company.jobs') }}",
-                    type: 'GET',
+    $(document).ready(function () {
+        $('#jobsTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('company.jobs') }}",
+                type: 'GET',
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false }, // Nomor urut
+                { data: 'posisi', name: 'posisi', orderable: false, searchable: true }, // Dropdown di kolom Posisi
+                { 
+                    data: 'kualifikasi', 
+                    name: 'kualifikasi', 
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return data ? data.replace(/\n/g, "<br>") : ""; // Ubah newline menjadi <br>
+                    }
                 },
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false }, // Nomor urut
-                    { data: 'posisi', name: 'posisi', orderable: false, searchable: true }, // Dropdown di kolom Posisi
-                    { data: 'kualifikasi', name: 'kualifikasi', searchable: false },
-                    { data: 'jobdesk', name: 'jobdesk', searchable: false },
-                    { data: 'benefit', name: 'benefit', searchable: false }
-                ],
-                order: [[1, 'asc']], 
-                searching: true,
-                language: {
-                    search: "Cari Posisi:",
-                    emptyTable: "Tidak ada data tersedia"
+                { 
+                    data: 'jobdesk', 
+                    name: 'jobdesk', 
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return data ? data.replace(/\n/g, "<br>") : ""; 
+                    }
+                },
+                { 
+                    data: 'benefit', 
+                    name: 'benefit', 
+                    searchable: false,
+                    render: function (data, type, row) {
+                        return data ? data.replace(/\n/g, "<br>") : ""; 
+                    }
                 }
-            });
+            ],
+            order: [[1, 'asc']], 
+            searching: true,
+            language: {
+                search: "Cari Posisi:",
+                emptyTable: "Tidak ada data tersedia"
+            }
         });
-    </script>
+    });
+</script>
+
 
     <script>
     function toggleDropdown(event, jobId) {

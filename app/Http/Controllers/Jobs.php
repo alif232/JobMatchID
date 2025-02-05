@@ -11,7 +11,8 @@ class Jobs extends Controller
     {
         // Retrieve search query
         $search = $request->input('search');
-    
+        $experience = $request->input('experience');
+
         $jobs = Job::with(['user.companyDetail']);
     
         if ($search) {
@@ -22,10 +23,14 @@ class Jobs extends Controller
                     $query->where('company_name', 'LIKE', "%{$search}%");
                 });
         }
+
+        if ($experience) {
+            $jobs->where('kualifikasi', 'like', "%$experience%");
+        }
     
         // Order jobs by the latest created_at date
         $jobs = $jobs->orderBy('created_at', 'desc')->get();
     
-        return view('jobs', compact('jobs', 'search'));
+        return view('jobs', compact('jobs', 'search', 'experience'));
     }
 }

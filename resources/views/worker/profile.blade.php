@@ -496,8 +496,8 @@
                                                     <div class="col-12">
                                                         <label for="skillInput" class="form-label">Add a Skill </label>
                                                         <div class="form-label"><span style="color: blue;">(Tambah
-                                                                Skills Masukkan Nama Skills Lalu Enter Terus Klik
-                                                                Save)</span> <span style="color: red;">(Hapus Skills
+                                                                Skills: Masukkan Nama Skills Lalu Enter Terus Klik
+                                                                Save)</span> <span style="color: red;">(Hapus Skills:
                                                                 Klik x Lalu Save)</span></div>
                                                         <input type="text" id="skillInput" class="form-control"
                                                             placeholder="Mis: PHP, Word, Excel, Javascript">

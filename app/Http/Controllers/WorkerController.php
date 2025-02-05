@@ -11,6 +11,7 @@ use App\Models\Education;
 use App\Models\Skills;
 use App\Models\Job;
 use App\Models\LamarStatus;
+use App\Models\Skill;
 use App\Helpers\TFIDFHelper;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
@@ -30,55 +31,49 @@ class WorkerController extends Controller
 
         // Ambil query pencarian jika ada
         $search = $request->input('search');
+        $experience = $request->input('experience');
+
+        // Mulai query jobs
+        $jobs = Job::with(['user.companyDetail'])->orderBy('created_at', 'desc');
 
         if ($search) {
-            // Jika ada pencarian, cari pekerjaan berdasarkan query
-            $jobs = Job::with(['user.companyDetail'])
-                ->where('posisi', 'LIKE', "%{$search}%")
-                ->orWhere('kualifikasi', 'LIKE', "%{$search}%")
-                ->orWhereHas('user.companyDetail', function ($query) use ($search) {
-                    $query->where('company_name', 'LIKE', "%{$search}%");
-                })
-                ->orderBy('created_at', 'desc')
-                ->get();
-
-            $recommendedJobs = collect();
-        } else {
-            // Ambil keterampilan pengguna
-            $userSkills = Skills::where('user_id', $user->id_user)->pluck('skills')->toArray();
-
-            // Ambil deskripsi pekerjaan
-            $jobs = Job::with(['user.companyDetail'])->orderBy('created_at', 'desc')->get();
-            $jobDescriptions = $jobs->pluck('kualifikasi')->toArray();
-
-            // Gabungkan keterampilan pengguna menjadi satu dokumen
-            $userSkillsDocument = implode(' ', $userSkills);
-
-            // TF-IDF Analysis
-            $documents = array_merge($jobDescriptions, [$userSkillsDocument]);
-            $tf = [];
-            $idf = TFIDFHelper::calculateIDF($documents);
-
-            // Menghitung TF untuk setiap dokumen
-            foreach ($documents as $document) {
-                $tf[] = TFIDFHelper::calculateTF($document);
-            }
-
-            // Menghitung vektor TF-IDF untuk keterampilan pengguna
-            $userSkillsTF = TFIDFHelper::calculateTF($userSkillsDocument);
-            $userSkillsTFIDF = TFIDFHelper::calculateTFIDF($userSkillsTF, $idf);
-
-            // Menyaring pekerjaan yang relevan berdasarkan kemiripan cosine
-            $recommendedJobs = $jobs->filter(function ($job) use ($userSkillsTFIDF, $jobDescriptions, $idf) {
-                $jobTF = TFIDFHelper::calculateTF($job->kualifikasi);
-                $jobTFIDF = TFIDFHelper::calculateTFIDF($jobTF, $idf);
-                $similarity = TFIDFHelper::cosineSimilarity($userSkillsTFIDF, $jobTFIDF);
-
-                return $similarity > 0.1;  // Sesuaikan threshold untuk rekomendasi pekerjaan
+            $jobs->where(function ($query) use ($search) {
+                $query->where('posisi', 'LIKE', "%{$search}%")
+                    ->orWhere('kualifikasi', 'LIKE', "%{$search}%")
+                    ->orWhereHas('user.companyDetail', function ($subQuery) use ($search) {
+                        $subQuery->where('company_name', 'LIKE', "%{$search}%");
+                    });
             });
         }
 
-        return view('worker.jobs', compact('user', 'jobs', 'recommendedJobs', 'search'));
+        if ($experience) {
+            $jobs->where('kualifikasi', 'LIKE', "%{$experience}%");
+        }
+
+        $jobs = $jobs->get(); // Get data setelah filtering selesai
+
+        // Ambil keterampilan pengguna
+        $userSkills = Skills::where('user_id', $user->id_user)->pluck('skills')->toArray();
+        $jobDescriptions = $jobs->pluck('kualifikasi')->toArray();
+
+        // Jika tidak ada pencarian, lakukan TF-IDF untuk rekomendasi
+        $recommendedJobs = collect();
+        if (!$search) {
+            $userSkillsDocument = implode(' ', $userSkills);
+            $documents = array_merge($jobDescriptions, [$userSkillsDocument]);
+            $idf = TFIDFHelper::calculateIDF($documents);
+
+            $userSkillsTF = TFIDFHelper::calculateTF($userSkillsDocument);
+            $userSkillsTFIDF = TFIDFHelper::calculateTFIDF($userSkillsTF, $idf);
+
+            $recommendedJobs = $jobs->filter(function ($job) use ($userSkillsTFIDF, $idf) {
+                $jobTF = TFIDFHelper::calculateTF($job->kualifikasi);
+                $jobTFIDF = TFIDFHelper::calculateTFIDF($jobTF, $idf);
+                return TFIDFHelper::cosineSimilarity($userSkillsTFIDF, $jobTFIDF) > 0.1;
+            });
+        }
+
+        return view('worker.jobs', compact('user', 'jobs', 'recommendedJobs', 'search', 'experience'));
     }
     
     public function showWorkerJobs($id)
@@ -324,6 +319,14 @@ class WorkerController extends Controller
         $education->delete();
 
         return redirect()->route('worker.profile')->with('success', 'Education Berhasil Dihapus.');
+    }
+
+    // Ambil data skill dari database untuk dropdown
+    public function getSkills(Request $request)
+    {
+        $query = $request->input('query');
+        $skills = Skill::where('name', 'LIKE', "%$query%")->limit(5)->get();
+        return response()->json($skills);
     }
 
     public function storeSkills(Request $request)
