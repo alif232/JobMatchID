@@ -321,36 +321,44 @@ class WorkerController extends Controller
         return redirect()->route('worker.profile')->with('success', 'Education Berhasil Dihapus.');
     }
 
-    // Ambil data skill dari database untuk dropdown
     public function getSkills(Request $request)
     {
         $query = $request->input('query');
+
+        // Cari skill yang cocok dengan input user
         $skills = Skill::where('name', 'LIKE', "%$query%")->limit(5)->get();
+
         return response()->json($skills);
     }
 
     public function storeSkills(Request $request)
-    {
-        $request->validate([
-            'skills' => 'required|string',
-        ]);
+{
+    $request->validate([
+        'skills' => 'required|string',
+    ]);
 
-        $skills = explode(',', $request->skills); // Convert string to array
-        $userId = Auth::id(); // Get the logged-in user ID
+    $skills = array_filter(explode(',', $request->skills)); // Ubah ke array
+    $userId = Auth::id();
 
-        // Delete existing skills for the user
-        Skills::where('user_id', $userId)->delete();
-
-        // Insert new skills
-        foreach ($skills as $skill) {
-            Skills::create([
-                'user_id' => $userId,
-                'skills' => $skill,
-            ]);
-        }
-
-        return redirect()->route('worker.profile')->with('success', 'Skills saved successfully!');
+    if (empty($skills)) {
+        return redirect()->route('worker.profile')->with('error', 'No skills provided.');
     }
+
+    // Hapus semua skill lama dari user
+    Skills::where('user_id', $userId)->delete();
+
+    foreach ($skills as $skill) {
+        $skill = trim($skill);
+
+        // Simpan langsung ke tabel `Skills`, tanpa harus ada di `skill`
+        Skills::create([
+            'user_id' => $userId,
+            'skills' => $skill, // Simpan apa yang dimasukkan user
+        ]);
+    }
+
+    return redirect()->route('worker.profile')->with('success', 'Skills saved successfully!');
+}
 
     public function deleteSkill($id)
     {

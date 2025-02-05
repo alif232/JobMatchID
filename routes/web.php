@@ -55,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/worker/education', [WorkerController::class, 'workerStoreEducation'])->name('worker.education.store'); // Store
     Route::post('/worker/education/update/{id}', [WorkerController::class, 'workerUpdateEducation'])->name('worker.education.update');
     Route::delete('/worker/education/delete/{id}', [WorkerController::class, 'workerDestroyEducation'])->name('worker.education.destroy');
+    Route::get('/get-skills', [WorkerController::class, 'getSkills'])->name('get.skills');
     Route::post('/worker/skills/store', [WorkerController::class, 'storeSkills'])->name('worker.skills.store');
     Route::delete('/worker/skills/delete/{id}', [WorkerController::class, 'deleteSkill'])->name('worker.skills.delete');
     

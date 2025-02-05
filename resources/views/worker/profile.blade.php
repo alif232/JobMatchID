@@ -31,6 +31,9 @@
     <link href="../home/assets/css/theme.css" rel="stylesheet" />
     <link rel="stylesheet" href="../profile/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+
 
 </head>
 
@@ -487,41 +490,33 @@
                                             </div>
                                         </div>
                                         <!-- Skills Tab -->
-                                        <div class="tab-pane fade" id="skills-tab-pane" role="tabpanel"
-                                            aria-labelledby="skills-tab" tabindex="0">
-                                            <form action="{{ route('worker.skills.store') }}" method="POST"
-                                                id="skillsForm">
+                                        <div class="tab-pane fade" id="skills-tab-pane" role="tabpanel" aria-labelledby="skills-tab" tabindex="0">
+                                            <form action="{{ route('worker.skills.store') }}" method="POST" id="skillsForm">
                                                 @csrf
                                                 <div class="row gy-3 gy-xxl-4">
                                                     <div class="col-12">
-                                                        <label for="skillInput" class="form-label">Add a Skill </label>
-                                                        <div class="form-label"><span style="color: blue;">(Tambah
-                                                                Skills: Masukkan Nama Skills Lalu Enter Terus Klik
-                                                                Save)</span> <span style="color: red;">(Hapus Skills:
-                                                                Klik x Lalu Save)</span></div>
-                                                        <input type="text" id="skillInput" class="form-control"
-                                                            placeholder="Mis: PHP, Word, Excel, Javascript">
+                                                        <label for="skillInput" class="form-label">Tambah Skill</label>
+                                                        <input type="text" id="skillInput" class="form-control" placeholder="Cari atau tambahkan skill">
+                                                        <ul id="skillSuggestions" class="list-group mt-1" style="display: none; position: absolute; z-index: 1000; width: 100%;"></ul>
                                                     </div>
-                                                    <div class="col-12" id="skillsContainer">
-                                                        <!-- Display existing skills as badges -->
-                                                        @foreach ($skills as $skill)
-                                                        <span class="badge bg-primary me-2 skill-badge"
-                                                            data-id="{{ $skill->id_skills }}">
-                                                            {{ $skill->skills }}
-                                                            <button type="button"
-                                                                class="btn-close btn-close-white ms-1 remove-skill-btn"
-                                                                aria-label="Remove"></button>
-                                                        </span>
-                                                        @endforeach
-                                                    </div>
+
                                                     <div class="col-12">
-                                                        <button type="submit" class="btn btn-primary">Save
-                                                            Skills</button>
+                                                        <div id="skillsContainer" class="mt-2">
+                                                            <!-- Skill badges akan muncul di sini -->
+                                                            @foreach ($skills as $skill)
+                                                                <span class="badge bg-primary me-2 p-2 skill-badge" data-skill="{{ $skill->skills }}">
+                                                                    {{ $skill->skills }}
+                                                                    <button type="button" class="btn-close btn-close-white ms-1 remove-skill-btn" data-skill="{{ $skill->skills }}" aria-label="Remove"></button>
+                                                                </span>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <input type="hidden" name="skills" id="skillsHiddenInput" value="{{ $skills->pluck('skills')->join(',') }}">
+                                                        <button type="submit" class="btn btn-primary w-100">Simpan Skills</button>
                                                     </div>
                                                 </div>
-                                                <!-- Hidden input to store all skills as a comma-separated string -->
-                                                <input type="hidden" name="skills" id="skillsHiddenInput"
-                                                    value="{{ $skills->pluck('skills')->join(',') }}">
                                             </form>
                                         </div>
                                         <!-- Password Tab -->
@@ -786,81 +781,91 @@
     });
     </script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const skillInput = document.getElementById('skillInput');
-        const skillsContainer = document.getElementById('skillsContainer');
-        const skillsHiddenInput = document.getElementById('skillsHiddenInput');
-        let skillsArray = skillsHiddenInput.value ? skillsHiddenInput.value.split(',') : [];
+document.addEventListener("DOMContentLoaded", function () {
+    const skillInput = document.getElementById("skillInput");
+    const skillsContainer = document.getElementById("skillsContainer");
+    const skillsHiddenInput = document.getElementById("skillsHiddenInput");
+    const skillSuggestions = document.getElementById("skillSuggestions");
 
-        // Add new skill on Enter key press
-        skillInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const skill = skillInput.value.trim();
-                if (skill && !skillsArray.includes(skill)) {
-                    skillsArray.push(skill); // Add to the local array
-                    updateSkillsDisplay(); // Update the badges display
-                    skillInput.value = ''; // Clear input field
-                }
-            }
-        });
+    let skillsArray = skillsHiddenInput.value ? skillsHiddenInput.value.split(',') : []; // Ambil skill dari input hidden
 
-        // Function to update the skills badges display
-        function updateSkillsDisplay() {
-            skillsContainer.innerHTML = ''; // Clear the container
-            skillsArray.forEach(skill => {
-                const badge = document.createElement('span');
-                badge.className = 'badge bg-primary me-2 skill-badge';
-                badge.innerHTML = `
+    // Fungsi untuk memperbarui tampilan badge
+    function updateSkillsDisplay() {
+        skillsContainer.innerHTML = ""; // Hapus badge lama
+        skillsArray.forEach(skill => {
+            const badge = document.createElement("span");
+            badge.className = "badge bg-primary me-2 p-2 skill-badge";
+            badge.innerHTML = `
                 ${skill}
-                <button type="button" class="btn-close btn-close-white ms-1 remove-skill-btn" aria-label="Remove"></button>
+                <button type="button" class="btn-close btn-close-white ms-1 remove-skill-btn" data-skill="${skill}" aria-label="Remove"></button>
             `;
-                skillsContainer.appendChild(badge);
-            });
-            skillsHiddenInput.value = skillsArray.join(','); // Sync with hidden input
-        }
-
-        // Event delegation for removing badges
-        skillsContainer.addEventListener('click', function(event) {
-            if (event.target.classList.contains('remove-skill-btn')) {
-                const skillBadge = event.target.closest('.skill-badge'); // Find the badge
-                const skillName = skillBadge.textContent.trim(); // Extract the skill name
-
-                // Remove from DOM immediately
-                skillBadge.remove();
-
-                // Remove from the array and update the hidden input
-                skillsArray = skillsArray.filter(skill => skill !== skillName);
-                skillsHiddenInput.value = skillsArray.join(',');
-
-                // If the skill exists in the database (has a data-id), send a DELETE request
-                const skillId = skillBadge.getAttribute('data-id');
-                if (skillId) {
-                    deleteSkillFromDatabase(skillId);
-                }
-            }
+            skillsContainer.appendChild(badge);
         });
 
-        // Function to delete a skill from the database
-        function deleteSkillFromDatabase(skillId) {
-            fetch(`/worker/skills/delete/${skillId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    },
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        alert('Failed to delete the skill. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
-                });
+        // Update input hidden sebelum submit
+        skillsHiddenInput.value = skillsArray.join(",");
+    }
+
+    // Tambahkan skill ke badge saat Enter ditekan
+    skillInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Mencegah form submit otomatis
+            addSkill(skillInput.value.trim());
         }
     });
-    </script>
+
+    // Menampilkan rekomendasi skill saat mengetik
+    skillInput.addEventListener("input", function () {
+        const query = skillInput.value.trim();
+        if (query.length < 2) {
+            skillSuggestions.style.display = "none";
+            return;
+        }
+
+        fetch(`/get-skills?query=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                skillSuggestions.innerHTML = "";
+                if (data.length > 0) {
+                    skillSuggestions.style.display = "block";
+                    data.forEach(skill => {
+                        const item = document.createElement("li");
+                        item.className = "list-group-item list-group-item-action";
+                        item.textContent = skill.name;
+                        item.addEventListener("click", () => {
+                            addSkill(skill.name);
+                        });
+                        skillSuggestions.appendChild(item);
+                    });
+                } else {
+                    skillSuggestions.style.display = "none";
+                }
+            });
+    });
+
+    // Fungsi untuk menambahkan skill ke dalam badge
+    function addSkill(skill) {
+        if (skill && !skillsArray.includes(skill)) {
+            skillsArray.push(skill);
+            updateSkillsDisplay();
+        }
+        skillInput.value = "";
+        skillSuggestions.style.display = "none";
+    }
+
+    // Event listener untuk menghapus skill saat tombol "x" diklik
+    skillsContainer.addEventListener("click", function (event) {
+        if (event.target.classList.contains("remove-skill-btn")) {
+            let skillToRemove = event.target.getAttribute("data-skill");
+            skillsArray = skillsArray.filter(skill => skill !== skillToRemove);
+            updateSkillsDisplay();
+        }
+    });
+
+    // Muat ulang daftar skill saat halaman dimuat
+    updateSkillsDisplay();
+});
+</script>
 
     <script>
     document.getElementById('logoutModal').addEventListener('shown.bs.modal', function() {
@@ -872,6 +877,36 @@
     <script src="../home/vendors/is/is.min.js"></script>
     <script src="../home/assets/js/theme.js"></script>
     <script src="../profile/bootstrap.bundle.min.js"></script>
+    <!-- jQuery & Select2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#skillSelect').select2({
+        tags: true,
+        tokenSeparators: [','],
+        placeholder: "Cari atau tambahkan skill...",
+        minimumInputLength: 1,
+        ajax: {
+            url: "{{ route('get.skills') }}",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return { query: params.term };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.map(function(skill) {
+                        return { id: skill.id_skill, text: skill.name };
+                    })
+                };
+            }
+        }
+    });
+});
+</script>
+
 </body>
 
 </html>
